@@ -17,3 +17,8 @@ library(beyonce)
 
 
 #### data analysis ####
+ggplot(data = penguins,
+       mapping = aes(x = sex,
+                     y = body_mass_g)) +
+  geom_boxplot() +
+  facet_wrap(~species)
