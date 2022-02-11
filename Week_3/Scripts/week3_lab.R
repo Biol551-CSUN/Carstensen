@@ -32,5 +32,3 @@ penguins %>%
   theme(title = element_text(size=12, color="dodgerblue1")) #changing title colors
 ggsave(here("Week_3", "Outputs", "penguinlab.png"),
        width = 7, height = 5)
-
-ggsave(here("Week_3","Output","week3_lab.png"))
