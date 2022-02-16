@@ -38,5 +38,5 @@ penguins %>% # Use penguins dataframe
   theme_bw() # Changing theme 
 
 ggsave(here("Week_4","Outputs","penguins_homework.png"),  # Saving output
-       width = 5, height = 3) # Changing width and height of output
+       width = 5, height = 4) # Changing width and height of output
   
