@@ -1,0 +1,85 @@
+---
+title: "Week6_homework"
+author: "Heather"
+date: "3/3/2022"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.path = "../Outputs/", echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Introduction
+
+Today we are going to practice **RMarkdown** using the *Palmer Penguins* data.
+
+## Loading libraries
+```{r}
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(kableExtra)
+library(palettetown)
+```
+
+## Inspecting the data
+
+Let's take a quick look at the Palmer Penguins data frame.
+
+```{r}
+glimpse(penguins)
+```
+
+## Making a table
+
+This data set includes three species of penguins:
+
+* Adelie
+* Gentoo
+* Chinstrap
+
+Penguins were examined on three islands:
+
+* Dream
+* Torgersen
+* Biscoe
+
+Let's look at the mean and variance of *flipper length* for each penguin species living on each island. **Gentoo** penguins on **Biscoe** have the largest mean flipper length. 
+
+```{r, echo=FALSE}
+penguins %>%  #Using penguins data frame
+  group_by(species, island) %>%  #Grouping by species and island
+  summarise(mean = mean(flipper_length_mm, #Using summary to calculate mean flipper length
+                        na.rm = TRUE), #Removing NAs
+            variance = var(flipper_length_mm, #Calculating variance in flipper length
+                           na.rm = TRUE)) %>% #Removing NAs
+  kbl() %>%  #Make it a kable table
+  kable_classic()%>%  #Using the kable classic theme
+  row_spec(5, bold = T, background = "palegreen") %>% #Changing row 5 to have bold text and green background
+  kable_styling(bootstrap_options = "striped", #Making alternate rows gray
+                full_width = FALSE) #Making the width smaller than the entire page
+```
+
+## Making a plot
+
+Let's make a plot to examine **flipper length (mm)** for each species living on each island for each sex.
+
+```{r Week6_homework_plot, out.width="70%", fig.asp=0.8, fig.align='center', echo=FALSE}
+penguins %>%  #Using penguins data frame
+  drop_na(sex, flipper_length_mm) %>% #dropping NA values from sex and flipper length
+  ggplot(mapping = aes(x = sex, #Mapping sex to x axis
+                       y = flipper_length_mm, #Mapping flipper length to y axis
+                       fill = species)) + #Mapping fill color to species
+  geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) + #Violin geometry with quantiles
+  facet_wrap(~island) + #Facet wrapping for island
+  theme_gray() + #Changing theme
+  scale_fill_manual(values = pokepal(134)) +  #Changing fill color palette
+  labs(title = "Flipper Length (mm) vs. Sex", #Adding title to plot
+       subtitle = "Flipper length by sex for penguins living on Biscoe, Dream, and Torgersen Islands", #Adding subtitle
+       y = "Flipper Length (mm)", #Changing y axis title
+       x = "Sex", #Changing x axis title
+       caption = "Source: Palmer Station LTER / palmerpengins package") #Adding a caption with data source
+```
+
