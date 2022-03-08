@@ -1,0 +1,79 @@
+---
+title: "Week7_homework"
+author: "Heather"
+date: "3/8/2022"
+output: 
+  html_document:
+    theme: cerulean
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.path = "../Outputs/", echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Today we are going to practice making a map.  
+Created by: Heather Carstensen  
+Updated on: 2022-03-08  
+
+## Load Libraries  
+
+```{r}
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+
+## Load Data - Meteorite Impacts  
+Read in the meteorite impact data from the Tidy Tuesday repository. This data frame was used for TidyTuesday 2019-06-11.
+
+```{r}
+meteorites <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-11/meteorites.csv")
+```
+
+## Setting Up Data Frames  
+Filtering the world map data to just include Australia and New Zealand. 
+
+```{r}
+world<-map_data("world")  #Bringing in world map data
+
+Aust_NZ <- world %>% 
+  filter(region == c("Australia", "New Zealand")) #Filtering to Australia and New Zealand
+```
+
+
+## Making a map  
+Using ggplot geoms polygon and point to make a map of Australia and New Zealand showing meteorite impacts, with color representing mass of the meteorite. 
+
+```{r, Week7_homework_map}
+ggplot()+  #Starting plot
+  geom_polygon(data = Aust_NZ, #Using the Australia/New Zealand data for polygon geometry to make a map
+               aes(x = long, #Mapping longitude to x-axis
+                   y = lat, #Mapping latitude to y-axis
+                   group = group),  #Mapping group = group
+               color = "black",  #Making region outlines black
+               fill = "lightgray")+  #Changing polygon fill color
+  geom_point(data = meteorites, #Layering on point geometry using meteorite impact data
+             aes(x = long, #Mapping longitude to x-axis
+                 y = lat,  #Mapping latitude to y-axis
+                 color = mass)) +  #Mapping color to mass of meteorite
+  scale_color_viridis_c(trans = "log10") +  #Changing color for meteorite mass to use viridis
+  theme(panel.background = element_rect(fill = "lightskyblue1"),  #Changing the background color to blue
+        panel.grid.major = element_line(size = 0.2)) +  #Reducing size of the grid lines
+  scale_x_continuous(breaks = scales::breaks_width(10)) +  #Making the grid line breaks every 10 degrees
+  scale_y_continuous(breaks = scales::breaks_width(10)) +  #Making the grid line breaks every 10 degrees
+  coord_map(projection = "mercator", #Changing projection to mercator
+            xlim = c(100,180),  #Zooming in to this range for longitude
+            ylim = c(-50,0)) +  #Zooming in to this range for latitude
+  labs(x = "Longitude",  #Changing x-axis lable
+       y = "Latitude", #Changing y-axis lable
+       title = "Meteorite Impacts by Mass in Australia and New Zealand",  #Adding a title
+       caption = "Data from the Meteoritical Society by way of NASA",  #Adding a caption with data source
+       color = "Mass (g)")  #Changing legend title
+```
+
+
+
