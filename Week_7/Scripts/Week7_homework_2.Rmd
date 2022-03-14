@@ -1,0 +1,202 @@
+---
+title: "Week 7 Homework B"
+author: "Heather"
+date: "3/11/2022"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Good plot/Bad plot assignment using Bob Ross TidyTuesday data set from week of 2019-08-06. 
+
+First, load the necessary libraries. 
+
+```{r}
+### Load Libraries ###
+
+library(tidyverse)
+library(here)
+library(ggpubr)
+library(jpeg)
+```
+
+## Loading and Viewing Data
+
+First I will read in the data and make alterations to the data frame that were
+suggested in the TidyTuesday repository. Then I will look at how many times
+each painting element was included in Bob Ross's paintings in the first 10 seasons
+of The Joy of Painting. This will allow me to find the top 10 elements he used
+in his paintings during those seasons. 
+
+```{r}
+### Read in Data from TidyTuesday###
+
+bob_ross <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-06/bob-ross.csv")
+
+### Run the suggested code to clean up the episode information ###
+
+bob_ross <- bob_ross %>%  #Overwriting object bob_ross
+  separate(col = EPISODE,  #Separating the column EPISODE into two columns
+           into = c("season", "episode"),  #Naming the two new columns
+           sep = "E",  #Telling R where to separate the values
+           remove = FALSE) %>%  #Don't remove the original column
+  mutate(season = str_extract(season, "[:digit:]+")) %>%  #Removing the "S" from the season values so that only the number corresponding to season remains
+  mutate_at(vars(season, episode), as.integer)  #Making the season and episode columns into integer columns rather than character
+
+### Look at sum of all columns in the first 10 seasons of The Joy of Painting
+
+bob_ross_sum <- bob_ross %>%  #New data frame 
+  filter(season %in% c("1", "2", "3", "4", "5", 
+                       "6", "7", "8", "9", "10")) %>% #Filtering for the first 10 seasons of the show
+  summarise(across(c(5:52), sum))  #Using summarise to generate sums of column values
+
+glimpse(bob_ross_sum)
+
+
+```
+
+
+## Data Wrangling
+
+Next, I will make two data frames to use for plotting - bob_ross_messy for the "Bad Plot"
+and bob_ross_clean for the "Good Plot."  
+bob_ross_clean will include the total number of times the top 10 painting elements were 
+included in his paintings during the first 10 seasons of The Joy of Painting, arranged 
+by value
+bob_ross_messy will include similar data, but not filtered to the top 10 elements, so there will be many more data points. 
+
+```{r}
+### Make a new data frame with the sum of the top 10 elements
+### included in Bob Ross's paintings from the first 10 seasons of The Joy of Painting
+
+bob_ross_clean <- bob_ross %>%  #New data frame
+  filter(season %in% c("1", "2", "3", "4", "5", 
+                       "6", "7", "8", "9", "10")) %>%  #Filtering for the first 10 seasons
+  summarise(across(c(BUSHES, CABIN, CLOUDS, CONIFER, CUMULUS, 
+                     DECIDUOUS, GRASS, LAKE, MOUNTAIN, OCEAN), sum)) %>% #Want sum of these top ten elements featured in Bob Ross's paintings
+  pivot_longer(cols = BUSHES:OCEAN,  #Pivoting the data frame longer
+               names_to = "Elements",  #Creating Elements column for painting elements
+               values_to = "Values")   #Creating Values column for frequency of those painting elements
+
+glimpse(bob_ross_clean)
+
+### Make a new data frame with the sum of elements
+### included in paintings from the first 10 seasons
+
+bob_ross_messy <- bob_ross %>%  #New data frame
+  filter(season %in% c("1", "2", "3", "4", "5", 
+                       "6", "7", "8", "9", "10")) %>%  #Filtering to the first 10 seasons
+  summarise(across(c(5:52), sum)) %>%  #Generating sum of these columns
+  pivot_longer(cols = APPLE_FRAME:RECTANGULAR_FRAME,  #Pivoting the data frame longer
+               names_to = "Elements",  #Creating Elements column for painting elements
+               values_to = "Values")   #Creating Values column for frequency of those painting elements
+
+glimpse(bob_ross_messy)
+```
+
+## Bad Plot
+
+Now I will make a Bad Plot using the bob_ross_messy data frame. 
+
+```{r}
+Bob <- here("Week_7", "Data", "Bob-Ross.jpg")  #Importing an image of Bob Ross
+Bob <- jpeg::readJPEG(Bob)  #Reading the image as jpeg
+colors_bad <- c("chartreuse", "#FC7A57", "#C4E7D4", "khaki1", "mediumspringgreen", "mistyrose",
+                "chartreuse", "#FC7A57", "#C4E7D4", "khaki1", "mediumspringgreen", "mistyrose",
+                "chartreuse", "#FC7A57", "#C4E7D4", "khaki1", "mediumspringgreen", "mistyrose",
+                "chartreuse", "#FC7A57", "#C4E7D4", "khaki1", "mediumspringgreen", "mistyrose",
+                "chartreuse", "#FC7A57", "#C4E7D4", "khaki1", "mediumspringgreen", "mistyrose",
+                "chartreuse", "#FC7A57", "#C4E7D4", "khaki1", "mediumspringgreen", "mistyrose",
+                "chartreuse", "#FC7A57", "#C4E7D4", "khaki1", "mediumspringgreen", "mistyrose",
+                "chartreuse", "#FC7A57", "#C4E7D4", "khaki1", "mediumspringgreen", "mistyrose") #Making a custom color palette designed for 48 bars by repeating 6 colors 8 times
+
+bob_ross_messy %>% #Use bob_ross_messy data frame
+  ggplot() +  #Start a ggplot
+  background_image(Bob) +  #Include background image of Bob Ross
+  geom_col(aes(x = Elements,  #Choose column geometry, and map Elements to x-axis
+               y = Values),  #Map Values to y-axis
+           fill = colors_bad,  #Set bar fill colors to custom palette
+           color = "orange") +  #Set bar outline color
+  labs(title = "Happy Little Accidents",  #Add a title
+       subtitle = "The early seasons",  #Add subtitle
+       x = " ",  #Remove x-axis label
+       y = " ") +  #Remove y-axis label
+  theme(plot.background = element_rect(fill = "darkgoldenrod4"),  #Set the plot background color
+        axis.text.x = element_text(hjust = 1)) +  #Drop the x-axis labels to below the plot border
+  ylim(-10, 200) #Increase the limits of the y-axis
+
+### Save the output ###
+
+ggsave(here("Week_7", "Outputs", "Bad_Plot.png"),
+       width = 6, height = 4)
+
+```
+
+Why this is a Bad Plot:  
+
+* Neither the title nor the subtitle describe the data or conclusions. 
+* There is no description of where the data came from. 
+* There are so many labels on the x-axis and the font is so big that the text overlaps completely. 
+* There are no titles/labels for the x and y-axes.
+* The panel background color make it difficult to read the axis grid labels. 
+* The y-axis is too tall for the data - it should not extend that much higher than the tallest bar.
+* The colors are randomly chosen and are not mapped to data. They don't match the aesthetics of the plot. They're all around the same brightness/value, making them difficult to distinguish. 
+* The border color around each bar is similarly bright, and so does not help distinguish between the bars. 
+* There are so many bars that the data are difficult to interpret (or would be if the x-axis could be read) - too much data has been plotted.
+* The background image of Bob Ross is distracting, unnecessary, and obscures the bars and grid lines. The picture is also blurry. 
+* The major y-axis marks are spaced every 50 items, but there should be more grid lines to help the reader interpret the data, such as every 10 items. 
+
+## Good Plot
+
+Now I will make a better plot using the bob_ross_clean data frame. I will also make a custom color palette based on the paint colors he uses in the show, but with alterations to make them brighter and easier to distinguish. 
+
+```{r}
+colors_good <- c("#598FB1", "#CA382B", "#0F1108", "#755A43", "#1D3524", 
+            "#2C4FA0", "#EDAE49", "#6F1A07", "#A0AA9D", "#256D1B")  #Choose a custom color palette
+
+bob_ross_clean %>%  #Start with bob_ross_clean data frame
+  ggplot() +  #Start a ggplot
+  geom_col(aes(x = Elements,  #Choose column geometry, and map Elements to x-axis
+               y = Values),  #Map Values to y-axis
+           fill = colors_good,  #Set the bar fill colors to the custom palette
+           color = "black") +  #Set the bar outlines to black 
+  theme(panel.background = element_rect(fill = "white",  #Set the plot panel background to white
+                                        color = "black"),  #Set the plot panel border to black
+        plot.background = element_rect(fill = "floralwhite"),  #Set the plot background to floral white
+        panel.grid.major = element_line(size = 0.1, #Set the size of the major grid lines
+                                        color = "black"),  #Set the color of the major grid lines to black
+        axis.text.x = element_text(angle = 60, #Set the angle of the x-axis labels to 60 degrees
+                                   hjust = 1)) +  #Drop the x-axis labels to below the plot border
+  scale_y_continuous(breaks = scales::breaks_width(10)) +  #Make y-axis major grid lines every 10 items
+  labs(title = "Frequency of top ten painting elements included in \nthe first ten seasons of Bob Ross's show, The Joy of Painting", #Add title
+       x = " ", #Remove x-axis label
+       y = "Count", #Change y-axis label
+       caption = "Data from FiveThirtyEight via TidyTuesday week of 2019-08-06")  #Add a caption with the data source
+
+### Save the Output ###
+
+ggsave(here("Week_7", "Outputs", "Good_Plot.png"),
+       width = 6, height = 4)
+```
+
+Why this is a Good Plot:
+
+* The title clearly describes the data. 
+* The subtitle describes where the data are from. 
+* A bar chart is a reasonable choice to show this type of data. 
+* The axis titles and grid labels are easy to read. 
+* The scale of the axis fits the data values well - the y-axis is not too high or low. 
+* The y-axis grid helps the reader see the value each bar corresponds to. 
+* The bar colors vary in value, so that adjacent bars are easy to distinguish. 
+* The bars are outlined in black, making their edges easy to see. 
+* The background behind the bar plot is white, making the bars easily visible. 
+* There are not any distracting or unnecessary graphics or plot elements. 
+* The size and placement of the plot within the space makes sense - the plot is not too small and there is not too much empty space. 
+
