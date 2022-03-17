@@ -1,0 +1,84 @@
+---
+title: "Week8_Homework"
+author: "Heather"
+date: "3/17/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.path = "../Outputs/")
+```
+
+## Load the libraries
+
+```{r}
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(ggthemes)
+```
+
+## Make first function
+
+We will make a function to calculate a ratio between two values, x and y
+
+
+```{r}
+ratio <- function(x, y) {  #Make a function called ratio that requires two variables
+  ratio <- x/y  #The ratio function means x divided by y
+  return(ratio) #The return is the ratio value
+}
+```
+
+## Test the first function
+
+```{r}
+ratio(12, 6)  #Calculate ratio for 12/6
+```
+
+
+```{r}
+ratio(100, 3306)  #Calculate ratio for 100/3306
+```
+
+## Make second function for a plot
+
+This function will allow for plotting a discrete/character variable on the x-axis, and a
+continuous variable on the y-axis
+
+```{r}
+palette = c("#9E4C69", "#EFB9CB", "#8095DB")  #Creating a custom color palette
+
+newplot<-function(data, x, y){  #Starting a function that requires a data set and x and y vaules
+  ggplot(data, aes(x = {{x}},  #Make this into a ggplot with x-axis mapped to {{x}} values
+                   y = {{y}},  #Map {{y}} values to y-axis
+                   fill = species)) +  #Map fill to species
+  geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) +  #Make violin plot with quantiles
+  theme_solarized_2() +  #Use solarized theme from ggthemes
+  scale_fill_manual(values = palette) #Use custom color palette
+}
+
+```
+
+## Test the second function to make plots
+
+```{r Week8_HW_plot_1}
+newplot(data = penguins, x = sex, y = body_mass_g) + #Make a new plot, chose data, x values, and y values
+  labs(title = "Penguin body mass (g) by sex for three species",  #Add title
+       x = "Sex",  #Change x-axis label
+       y = "Body Mass (g)",  #Change y-axis label
+       fill = "Species", #Change legend title
+       caption = "Source: Palmer Penguins data")  #Add caption with data source
+
+```
+
+
+```{r Week8_HW_plot_2}
+newplot(data = penguins, x = island, y = bill_length_mm) + #Make a new plot, chose data, x values, and y values
+  labs(title = "Penguin bill length (mm) by island for three species", #Add title
+       x = "Island", #Change x-axis label
+       y = "Bill Length (mm)", #Change y-axis label
+       fill = "Species", #Change legend title
+       caption = "Source: Palmer Penguins data") #Add caption with data source
+```
+
