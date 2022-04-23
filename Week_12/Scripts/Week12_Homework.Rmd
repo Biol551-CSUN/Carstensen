@@ -1,0 +1,86 @@
+---
+title: "Week12_Homework"
+author: "Heather"
+date: "4/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading Libraries
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+library(PNWColors)
+```
+
+## Load Data
+
+```{r}
+intertidal<-read_csv(here("Week_12","Data","Intertidaldata.csv"))
+```
+
+## Cleaning the Data
+
+First I will clean up the data using Janitor and Stringr.
+
+```{r}
+intertidal <- intertidal %>%  #Overwrite data frame
+  clean_names()  #Cleaning names using janitor package
+
+intertidal_clean <- intertidal %>%  #Make a new data frame
+  mutate(quadrat = str_replace(quadrat, pattern = "\\.", replacement = "")) %>%  #Replace any . in the quadrat column with nothing
+  mutate(quadrat = str_replace(quadrat, pattern = "[0-9]", replacement = "")) %>% #Replace any numbers in the quadrat column with nothing
+  mutate(quadrat = str_trim(quadrat)) #Replace any blank spaces in the quadrat column with nothing
+```
+
+## Data Analysis
+
+Now I will organize the data for plotting, converting the quadrat column to a factor column and reordering the factor levels to: Low, Mid, High. 
+
+```{r}
+values <-  intertidal_clean %>% 
+  group_by(quadrat) %>%  #Grouping by quadrat tide level
+  summarise(across(c(whelks_counts, crabs_counts, stars_counts), sum)) %>% #Summarizing data by generating sum of whelks, crabs, and stars counted in each tide level
+  rename("Whelks" = whelks_counts,  #Renaming whelks column
+         "Crabs" = crabs_counts,  #Renaming crabs column
+         "Stars" = stars_counts) %>%  #Renaming stars column
+  pivot_longer(Whelks:Stars, #Pivoting longer across the three count variables
+               names_to = "variables", #Naming variable column variables
+               values_to = "count") %>%  #Naming value column values
+  mutate(quadrat = factor(quadrat, #Making quadrat column into a factor column
+                          levels = c('Low', 'Mid', 'High'))) #Reordering the factor levels for tide
+```
+
+## Color palette
+
+Setting up a color palette using the PNWColors package
+
+```{r}
+pal <- pnw_palette("Starfish", 3)
+```
+
+
+## Plotting
+
+Now I will make a plot.
+
+```{r}
+values %>% 
+  ggplot(aes(x = quadrat,  #Making a plot with quadrat mapped to the x-axis
+             y = count,  #Mapping count to the y-axis
+             fill = variables)) +  #Mapping fill color to variables
+  geom_col(position = position_dodge()) + #Column geometry with dodge position to make grouped bars
+  scale_fill_manual(values = pal) +  #Applying color palette
+  theme_bw() +  #Changing theme
+  labs(x = "Tide height",  #Changing x-axis label
+       y = "Count",  #Changing y-axis label
+       title = "Total number of crabs, stars, and whelks by tide height",  #Changing title
+       fill = "Organism")  #Changing legend title
+
+ggsave(here("Week_12", "Outputs", "Intertidal.png"))
+```
