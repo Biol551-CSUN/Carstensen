@@ -38,3 +38,16 @@ Folders:
 [Week_8](https://github.com/Biol551-CSUN/Carstensen/tree/main/Week_8):
  * Outputs: [mypenguingif.gif](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_8/Outputs/mypengiungif.gif) and [penguinplot.png](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_8/Outputs/penguinplot.png) are practice from class. [Week8_HW_plot_1-1.png](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_8/Outputs/Week8_HW_plot_1-1.png) and [Week8_HW_plot_2-1.png](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_8/Outputs/Week8_HW_plot_2-1.png) are plots generated from the plot function from this week's lab/homework assignment script.
  * Scripts: [Week8.R](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_8/Scripts/Week8.R) and [Week8_2.R](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_8/Scripts/Week8_2.R) are practice scripts from class. [Week8_Homework.Rmd](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_8/Scripts/Week8_Homework.Rmd) and [Week8_Homework.html](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_8/Scripts/Week8_Homework.html) are the lab homework assignment this week. 
+
+[Week_10](https://github.com/Biol551-CSUN/Carstensen/tree/main/Week_10):
+ * Data: [stars](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_10/Data/stars.csv)
+ * Script: [Reprex practice](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_10/Scripts/Week10.R)
+ * test_app: [Practice shiny app](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_10/test_app/app.R)
+
+[Week_12](https://github.com/Biol551-CSUN/Carstensen/tree/main/Week_12):
+ * Data: [Intertidal data](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Data/intertidaldata.csv), [Latitude data](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Data/intertidaldata_latitude.csv), and [Data Dictionary](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Data/intertidal_data_dictionary.csv).
+ * Scripts: [Week12.R](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Scripts/Week12.R) is a practice script working with strings. [Week12_b.R](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Scripts/Week12_b.R) is a practice script working with factors. [Week12_Homework.Rmd](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Scripts/Week12_Homework.Rmd) and [Week12_Homework.html](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Scripts/Week12_Homework.html) are the homework script files for this week. 
+ * Outputs: [Intertidal.png](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Outputs/Intertidal.png) is the homework plot for this week. 
+
+
+
