@@ -49,5 +49,8 @@ Folders:
  * Scripts: [Week12.R](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Scripts/Week12.R) is a practice script working with strings. [Week12_b.R](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Scripts/Week12_b.R) is a practice script working with factors. [Week12_Homework.Rmd](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Scripts/Week12_Homework.Rmd) and [Week12_Homework.html](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Scripts/Week12_Homework.html) are the homework script files for this week. 
  * Outputs: [Intertidal.png](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_12/Outputs/Intertidal.png) is the homework plot for this week. 
 
-
+[Week_13](https://github.com/Biol551-CSUN/Carstensen/tree/main/Week_13):
+ * Data: [cond_data](https://github.com/Biol551-CSUN/Carstensen/tree/main/Week_13/Data/cond_data) folder contains .csv files used during class. [homework](https://github.com/Biol551-CSUN/Carstensen/tree/main/Week_13/Data/homework) contains .csv files used for Week 13 homework. 
+ * Scripts: [Week_13.R](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_13/Scripts/Week_13.R) and [Week_13B.R](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_13/Scripts/Week_13B.R) are class notes from this week. [Week_13_Homework.Rmd](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_13/Scripts/Week_13_Homework.Rmd) and [Week_13_Homework.html](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_13/Scripts/Week_13_Homework.html) are the homework assignment scripts - practice with iterative coding. 
+ * Outputs: [table.docx](https://github.com/Biol551-CSUN/Carstensen/blob/main/Week_13/Outputs/table.docx) is a table made from class during modeling practice. 
 
