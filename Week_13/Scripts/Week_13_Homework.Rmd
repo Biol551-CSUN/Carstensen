@@ -1,0 +1,74 @@
+---
+title: "Week_13_homework"
+author: "Heather"
+date: "4/27/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading Libraries
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+## Using a for loop
+
+I will use a for loop to read in 4 data files, then calculate the means and standard deviations for two variables: temperature and light intensity.
+
+First, I need to set up the file path, create an empty data frame, and add the column names to the data frame. 
+
+```{r}
+H_path<-here("Week_13", "data", "homework")  #Set file path
+
+H_files <- dir(path = H_path, pattern = ".csv")  #Selecting the files
+
+H_data<-data.frame(matrix(nrow = length(H_files), ncol = 5))  #Setting up an empty data frame 
+
+colnames(H_data)<-c("filename","mean_temp", "stdev_temp", "mean_light", "stdev_light")  #Filling in the column names for empty data frame
+```
+
+Now, I will fill in the data frame I created with the average and standard deviation of temperature and light intensity for each file.
+
+```{r}
+for (i in 1:length(H_files)){   #Loop over the number of files
+  homework_data<-read_csv(paste0(H_path,"/",H_files[i]))  #Reading in the data files
+  H_data$filename[i]<-H_files[i]  #Adding the file name for each row to empty data frame
+  H_data$mean_temp[i]<-mean(homework_data$Temp.C, na.rm = TRUE)  #Adding temperature mean for each file
+  H_data$stdev_temp[i] <- sd(homework_data$Temp.C, na.rm = TRUE) #Adding temperature standard deviation for each file
+  H_data$mean_light[i]<-mean(homework_data$Intensity.lux, na.rm = TRUE) #Adding light intensity mean for each file
+  H_data$stdev_light[i] <- sd(homework_data$Intensity.lux, na.rm = TRUE) #Adding light intensity standard deviation for each file
+}
+
+head(H_data) #View the new data frame
+```
+
+
+## Using Purrr package
+
+Now I will do the same thing using the purrr package instead of a for loop. 
+
+```{r}
+H_files2 <- dir(path = H_path, pattern = ".csv", full.names = TRUE) #Selecting files in file path and keeping full name
+
+H_data2<-H_files2 %>%  #Making a new data frame
+  set_names()%>%  #Setting the name of each list to the file name
+  map_df(read_csv,.id = "filename") %>%  #Mapping everything to a data frame and adding a column for file name
+  group_by(filename) %>%  #Grouping by the file name
+  summarise(mean_temp = mean(Temp.C, na.rm = TRUE),  #Calculate  temperature mean for each file
+            stdev_temp = sd(Temp.C, na.rm = TRUE), #Calculate temperature standard deviation for each file
+            mean_light = mean(Intensity.lux, na.rm = TRUE), #Calculate light intensity mean for each file
+            stdev_light = sd(Intensity.lux, na.rm = TRUE))#Calculate light intensity standard deviation for each file
+
+head(H_data2)  #View the new data frame
+
+```
+
+
+
+
+
